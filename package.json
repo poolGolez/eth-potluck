@@ -1,0 +1,14 @@
+{
+  "name": "potluck",
+  "version": "1.0.0",
+  "description": "Ethereum-based potluck",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Pool Golez",
+  "license": "ISC",
+  "dependencies": {
+    "solc": "^0.8.11"
+  }
+}
