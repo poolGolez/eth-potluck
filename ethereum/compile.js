@@ -7,7 +7,7 @@ const buildDir = path.join(__dirname, 'build')
 
 cleanBuildDirectory();
 compileAllSourceFiles();
-console.log("Successfully compiled!!!");
+console.log("Compilation success!");
 
 function cleanBuildDirectory() {
     if (fs.existsSync(buildDir)) {
@@ -19,39 +19,40 @@ function cleanBuildDirectory() {
 }
 
 function compileAllSourceFiles() {
-    fs.readdir(contractsDir,(err, fileNames) => {
-        if(err) {
-            console.error(err);
-        }
-
-        fileNames.forEach((fileName) => {
-            const filePath = path.join(contractsDir, fileName);
-            if(fs.lstatSync(filePath).isFile()) {
-                compileFilePath(filePath);
+    var input = JSON.stringify({
+        language: 'Solidity',
+        sources: getSourceCode(),
+        settings: {
+            outputSelection: {
+                '*': {
+                '*': ['*']
+                }
             }
+        }
+    });
+
+    const compiled = JSON.parse(solc.compile(input));
+    Object.keys(compiled.contracts).forEach(fileName => {
+        const compiledFile = compiled.contracts[fileName];
+        Object.keys(compiledFile).forEach(contractName => {
+            const compiledContract = compiledFile[contractName];
+            const compiledContractPath = path.join(buildDir, contractName);
+
+            fs.outputJSONSync(compiledContractPath, compiledContract);
         });
+
+
     });
 }
 
-function compileFilePath(srcPath) {
-    // const file = fs.readFileSync(srcPath, 'utf-8');
-
-    // var input = JSON.stringify({
-    //     language: 'Solidity',
-    //     sources: {
-    //     'Potluck.sol': { content: file }
-    //     },
-    //     settings: {
-    //     outputSelection: {
-    //         '*': {
-    //         '*': ['*']
-    //         }
-    //     }
-    //     }
-    // });
-
-
-    // const compiled = solc.compile(input);
-    // console.log(path.join(buildDir, 'compiled.json'));
-    // fs.writeFileSync(path.join(buildDir, 'compiled.json'), compiled);
+function getSourceCode() {
+    return fs.readdirSync(contractsDir, { withFileTypes: true, encoding: 'utf-8' })
+            .filter(f => f.isFile())
+            .reduce((result, f) => {
+                return {
+                    ...result,
+                    [f.name]: {
+                        content: fs.readFileSync(path.join(contractsDir, f.name), 'utf-8')
+                    }
+                } }, {});
 }
