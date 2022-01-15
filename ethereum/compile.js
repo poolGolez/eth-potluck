@@ -36,7 +36,7 @@ function compileAllSourceFiles() {
         const compiledFile = compiled.contracts[fileName];
         Object.keys(compiledFile).forEach(contractName => {
             const compiledContract = compiledFile[contractName];
-            const compiledContractPath = path.join(buildDir, contractName);
+            const compiledContractPath = path.join(buildDir, `${contractName}.json`);
 
             fs.outputJSONSync(compiledContractPath, compiledContract);
         });
