@@ -4,12 +4,15 @@
   "description": "Ethereum-based potluck",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "npm run compile && mocha",
     "compile": "node ethereum/compile.js"
   },
   "author": "Pool Golez",
   "license": "ISC",
   "dependencies": {
-    "solc": "^0.8.11"
+    "ganache-cli": "^6.12.2",
+    "mocha": "^9.1.4",
+    "solc": "^0.8.11",
+    "web3": "^1.6.1"
   }
 }
