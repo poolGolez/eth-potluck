@@ -3,12 +3,14 @@ pragma solidity ^0.8.11;
 
 contract Potluck {
     address public manager;
-    uint public ticketCount;
     address[] public tickets;
     uint public ticketPrice;
 
     constructor(uint _ticketCount, uint _ticketPrice) {
-        require(_ticketCount <= 100, "Number of entries can't be bigger than 100.");
+        require(
+            _ticketCount <= 100,
+            "Number of entries can't be bigger than 100."
+        );
 
         manager = msg.sender;
         tickets = new address[](_ticketCount);
@@ -27,7 +29,7 @@ contract Potluck {
     {
         require(
             msg.value >= ticketPrice,
-            "Insufficient funds to buy ticket"
+            "Insufficient funds to buy ticket."
         );
 
         require(
